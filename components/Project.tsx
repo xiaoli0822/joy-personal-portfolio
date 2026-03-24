@@ -1,109 +1,110 @@
 "use client"
+/* eslint-disable @next/next/no-img-element */
 
-import { useRef } from "react"
-import { projectsData } from "@/lib/data"
-import Image from "next/image"
+import { MouseEvent, useRef } from "react"
+import type { ProjectEntry } from "@/lib/site-content-schema"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { FaGithubSquare } from "react-icons/fa"
 import Link from "next/link"
 import { FiExternalLink } from "react-icons/fi"
 import { useLocale } from "next-intl"
+import { sectionTitles } from "@/lib/data"
+import { useRouter } from "next/navigation"
 
-type ProjectProps = (typeof projectsData)[number]
+type ProjectProps = {
+  project: ProjectEntry
+}
 
-export default function Project({
-  title,
-  description,
-  desc_zh,
-  title_zh,
-  tags,
-  imageUrl,
-  projectUrl,
-  demoUrl,
-}: ProjectProps) {
+export default function Project({ project }: ProjectProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const router = useRouter()
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["0 1", "1.33 1"],
+    offset: ["0 1", "1.1 1"],
   })
-  const scaleProgess = useTransform(scrollYProgress, [0, 1], [0.8, 1])
-  const opacityProgess = useTransform(scrollYProgress, [0, 1], [0.6, 1])
+  const scaleProgess = useTransform(scrollYProgress, [0, 1], [0.92, 1])
+  const opacityProgess = useTransform(scrollYProgress, [0, 1], [0.5, 1])
   const activeLocale = useLocale()
+  const content = activeLocale === "zh" ? sectionTitles.zh : sectionTitles.en
+  const detailHref = `/${activeLocale}/projects/${project.slug}`
+
+  const stopCardNavigation = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.stopPropagation()
+  }
 
   return (
     <motion.div
       ref={ref}
-      style={{
-        scale: scaleProgess,
-        opacity: opacityProgess,
+      style={{ scale: scaleProgess, opacity: opacityProgess }}
+      className="group mb-4 cursor-pointer sm:mb-8 last:mb-0"
+      onClick={() => router.push(detailHref)}
+      role="link"
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault()
+          router.push(detailHref)
+        }
       }}
-      className="group mb-3 sm:mb-8 last:mb-0"
     >
-      <section className="bg-gray-100 max-w-[45rem] border border-black/5 rounded-lg overflow-hidden sm:pr-8 relative sm:h-[28rem]  transition sm:group-even:pl-8 dark:text-white dark:bg-white/10 ">
-        <div className="group pt-4 pb-7 px-5 sm:pl-10 sm:pr-2 sm:pt-10 sm:max-w-[50%] flex flex-col items-start gap-3 h-full sm:group-even:ml-[18rem]">
-          <div className="flex flex-col gap-3 items-start ">
-            <h3 className="text-2xl font-semibold group-hover:text-pink dark:group-hover:text-yellow hover:underline">
-              <Link href={demoUrl} target="_blank">
-                {activeLocale === "zh" ? title_zh : title}
-              </Link>
-            </h3>
-
-            <div className="flex gap-3 text-sm text-gray-500 dark:text-gray-300">
-              {" "}
-              <Link
-                href={projectUrl}
-                target="_blank"
-                className="w-full flex items-center gap-1  hover:underline underline-offset-2"
-              >
-                <span className="break-keep">Code</span>
-
-                <FaGithubSquare className="w-5 h-5" />
-              </Link>
-              {demoUrl && (
-                <Link
-                  href={demoUrl}
-                  target="_blank"
-                  className=" w-full flex items-center gap-1 hover:underline underline-offset-2"
-                >
-                  <span className="break-keep min-w-[4.5rem]">Live demo</span>
-                  <FiExternalLink className="w-5 h-5 " />
-                </Link>
-              )}
+      <section className="relative overflow-hidden rounded-[2rem] border border-white/60 bg-white/80 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur transition duration-300 hover:-translate-y-1 hover:shadow-[0_35px_100px_rgba(15,23,42,0.13)] dark:border-white/10 dark:bg-white/10">
+        <div className="grid gap-8 p-5 sm:grid-cols-[minmax(0,1fr)_22rem] sm:p-8">
+          <div className="flex flex-col items-start gap-4">
+            <div className="flex flex-col gap-3">
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:bg-white/10 dark:text-white/50">
+                {content.caseStudy}
+              </span>
+              <h3 className="text-2xl font-semibold text-slate-900 transition group-hover:text-rose-500 dark:text-white dark:group-hover:text-amber-300">
+                <Link href={detailHref}>{project.title}</Link>
+              </h3>
+              <p className="leading-relaxed text-gray-700 dark:text-white/70">{project.summary}</p>
             </div>
+
+            <div className="flex flex-wrap gap-3 text-sm text-gray-500 dark:text-gray-300">
+              {project.showSourceButton && project.projectUrl ? (
+                <Link
+                  href={project.projectUrl}
+                  target="_blank"
+                  onClick={stopCardNavigation}
+                  className="flex items-center gap-1 rounded-full border border-slate-200 bg-white px-4 py-2 hover:border-slate-300 hover:shadow-sm dark:border-white/10 dark:bg-white/5"
+                >
+                  <span className="break-keep">{content.codeLabel}</span>
+                  <FaGithubSquare className="h-5 w-5" />
+                </Link>
+              ) : null}
+              {project.showDemoButton && project.demoUrl ? (
+                <Link
+                  href={project.demoUrl}
+                  target="_blank"
+                  onClick={stopCardNavigation}
+                  className="flex items-center gap-1 rounded-full border border-slate-200 bg-white px-4 py-2 hover:border-slate-300 hover:shadow-sm dark:border-white/10 dark:bg-white/5"
+                >
+                  <span className="break-keep min-w-[4.5rem]">{content.demoLabel}</span>
+                  <FiExternalLink className="h-5 w-5" />
+                </Link>
+              ) : null}
+            </div>
+
+            <ul className="mt-auto flex flex-wrap gap-2">
+              {project.tags.map((tag, index) => (
+                <li
+                  className="rounded-full bg-black/[0.78] px-3 py-1 text-[0.7rem] uppercase tracking-wider text-white dark:text-white/75"
+                  key={`${tag}-${index}`}
+                >
+                  {tag}
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <p className="mt-2 leading-relaxed text-gray-700 dark:text-white/70">
-            {activeLocale === "zh" ? desc_zh : description}
-          </p>
-          <ul className="flex flex-wrap mt-auto gap-2">
-            {tags.map((tag, index) => (
-              <li
-                className="bg-black/[0.7] px-3 py-1 text-[0.7rem] uppercase tracking-wider text-white rounded-full dark:text-white/70"
-                key={index}
-              >
-                {tag}
-              </li>
-            ))}
-          </ul>
+          <div className="relative overflow-hidden rounded-[1.5rem] border border-white/50 bg-slate-100/80 p-2 dark:border-white/10 dark:bg-slate-900/40">
+            <img
+              src={project.coverImage}
+              alt={`${project.title} cover`}
+              className="h-full min-h-[16rem] w-full rounded-[1.1rem] object-cover transition duration-500 group-hover:scale-[1.03]"
+            />
+          </div>
         </div>
-
-        <Image
-          src={imageUrl}
-          alt="Project I worked on"
-          quality={95}
-          className="absolute hidden sm:block top-8 -right-40 w-[28.25rem] rounded-t-lg shadow-2xl
-        transition 
-        group-hover:scale-[1.04]
-        group-hover:-translate-x-3
-        group-hover:translate-y-3
-        group-hover:-rotate-2
-
-        group-even:group-hover:translate-x-3
-        group-even:group-hover:translate-y-3
-        group-even:group-hover:rotate-2
-
-        group-even:right-[initial] group-even:-left-40"
-        />
       </section>
     </motion.div>
   )

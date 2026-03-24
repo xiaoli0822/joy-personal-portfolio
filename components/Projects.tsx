@@ -1,40 +1,37 @@
 "use client"
 
-import React from "react"
-import { headerLanguageMap, projectsData } from "@/lib/data"
+import { sectionTitles } from "@/lib/data"
 import { useSectionInView } from "@/lib/hooks"
 import SectionHeading from "./SectionHeading"
 import Project from "./Project"
 import { useLocale } from "next-intl"
 import Link from "next/link"
 import { FaAngleRight } from "react-icons/fa6"
+import type { ProjectEntry } from "@/lib/site-content-schema"
 
-export default function Projects() {
+type ProjectsProps = {
+  projects: ProjectEntry[]
+}
+
+export default function Projects({ projects }: ProjectsProps) {
   const { ref } = useSectionInView("Projects", 0.1)
   const activeLocale = useLocale()
+  const content = activeLocale === "zh" ? sectionTitles.zh : sectionTitles.en
 
   return (
-    <section ref={ref} id="projects" className="scroll-mt-28 mb-28">
-      <SectionHeading>
-        {" "}
-        {activeLocale === "zh"
-          ? headerLanguageMap["Projects"]
-          : "Featured Projects"}
-      </SectionHeading>
+    <section ref={ref} id="projects" className="mb-28 scroll-mt-28">
+      <SectionHeading>{content.projects}</SectionHeading>
       <div>
-        {projectsData.map((project, index) => (
-          <React.Fragment key={index}>
-            <Project {...project} />
-          </React.Fragment>
+        {projects.map((project) => (
+          <Project key={project.id} project={project} />
         ))}
       </div>
       <Link
-        className="group tracing-wide font-semibold hover:underline hover:underline-offset-4 hover:decoration-pink text-slate-800 dark:text-slate-400 w-full flex gap-1 items-center justify-center mt-10"
-        target="_blank"
-        href="https://github.com/Codefreyy?tab=repositories"
+        className="group mt-10 flex w-full items-center justify-center gap-1 font-semibold tracking-wide text-slate-800 hover:underline hover:underline-offset-4 hover:decoration-rose-400 dark:text-slate-400"
+        href={`/${activeLocale}/projects`}
       >
-        View All Projects
-        <FaAngleRight className="group-hover:translate-x-2 transition" />
+        {content.viewAllProjects}
+        <FaAngleRight className="transition group-hover:translate-x-2" />
       </Link>
     </section>
   )

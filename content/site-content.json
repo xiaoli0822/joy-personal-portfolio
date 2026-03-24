@@ -1,0 +1,164 @@
+{
+  "profile": {
+    "name": "张帆",
+    "headline": "UI设计师",
+    "roles": [
+      "UI设计师",
+      "UI Designer"
+    ],
+    "shortIntro": "Designing my life, designing everything.",
+    "focusLine": "目前主要专注于 Figma、UI 设计与体验表达。",
+    "about": [
+      "我是一名偏视觉与体验方向的设计师，喜欢把概念、情绪和产品逻辑一起落成可用又好看的界面。",
+      "我关注界面的整体节奏、信息层级、交互动效和设计一致性，也会通过作品集来展示完整的设计思考过程。",
+      "除了画界面，我也在持续学习产品表达、设计系统和跨端体验，希望做出既有辨识度又好用的数字产品。"
+    ],
+    "profileImage": "/profile.jpg",
+    "resume": "/joy-fullstack-resume.pdf",
+    "showResumeAction": false,
+    "showGithubAction": false,
+    "showBlogAction": false,
+    "socialLinks": {
+      "github": "https://github.com/Codefreyy",
+      "blog": "https://blog-joy-peng.netlify.app"
+    },
+    "contacts": {
+      "wechat": {
+        "enabled": true,
+        "displayMode": "account",
+        "account": "XiaoFan-Design",
+        "link": "",
+        "qrImage": ""
+      },
+      "qq": {
+        "enabled": true,
+        "displayMode": "account",
+        "account": "123456789",
+        "link": "",
+        "qrImage": ""
+      }
+    }
+  },
+  "skills": [
+    "Figma",
+    "UI Design",
+    "UX Thinking",
+    "Design System",
+    "Wireframe",
+    "Prototype",
+    "Interaction Design",
+    "Visual Design",
+    "Branding",
+    "Responsive Design"
+  ],
+  "experiences": [
+    {
+      "id": "designer-portfolio",
+      "title": "视觉与交互设计实践",
+      "location": "个人作品集与商业项目",
+      "date": "2022 - 至今",
+      "description": "围绕品牌表达、界面视觉和用户体验进行设计输出，持续沉淀作品集案例与设计方法。",
+      "iconKey": "react"
+    },
+    {
+      "id": "design-learning",
+      "title": "设计系统与产品体验研究",
+      "location": "自驱学习与项目沉淀",
+      "date": "2021 - 至今",
+      "description": "持续学习设计系统、信息架构、交互动效与组件化表达，提升方案落地与体验一致性。",
+      "iconKey": "graduation"
+    }
+  ],
+  "projects": [
+    {
+      "id": "mobile-ui-case",
+      "slug": "mobile-ui-case",
+      "title": "移动端体验设计案例",
+      "summary": "围绕移动端内容浏览与关键转化路径重构界面结构，强调轻量、顺手和情绪感。",
+      "descriptionMarkdown": "## 项目目标\n\n提升移动端浏览效率与操作顺手程度。\n\n## 设计内容\n\n1. 重新组织首页内容结构\n2. 优化核心操作按钮层级\n3. 统一卡片、按钮和弹层样式\n4. 补充页面转场与微动效策略\n\n## 输出结果\n\n- 页面视觉稿\n- 高保真原型\n- 设计规范整理",
+      "tags": [
+        "Mobile",
+        "UX",
+        "Prototype"
+      ],
+      "coverImage": "/typing-speed.png",
+      "galleryImages": [
+        {
+          "src": "/typing-speed.png",
+          "alt": "移动端体验设计封面"
+        },
+        {
+          "src": "/d3.png",
+          "alt": "移动端体验设计流程页"
+        },
+        {
+          "src": "/uploads/projects/mobile-ui-case/1774284466293.png",
+          "alt": "移动端体验设计案例 展示图"
+        },
+        {
+          "src": "/uploads/projects/mobile-ui-case/1774284484578.png",
+          "alt": "移动端体验设计案例 展示图"
+        },
+        {
+          "src": "/uploads/projects/mobile-ui-case/1774284484633.png",
+          "alt": "移动端体验设计案例 展示图"
+        },
+        {
+          "src": "/uploads/projects/mobile-ui-case/1774284484705.png",
+          "alt": "移动端体验设计案例 展示图"
+        },
+        {
+          "src": "/uploads/projects/mobile-ui-case/1774284484834.png",
+          "alt": "移动端体验设计案例 展示图"
+        },
+        {
+          "src": "/uploads/projects/mobile-ui-case/1774284484880.png",
+          "alt": "移动端体验设计案例 展示图"
+        },
+        {
+          "src": "/uploads/projects/mobile-ui-case/1774285157815.jpg",
+          "alt": "移动端体验设计案例 展示图"
+        }
+      ],
+      "projectUrl": "",
+      "demoUrl": "",
+      "showSourceButton": false,
+      "showDemoButton": false,
+      "showDescriptionCard": false
+    },
+    {
+      "id": "project-1774284556438",
+      "slug": "project-1774284556438",
+      "title": "叶尔",
+      "summary": "XXXX",
+      "descriptionMarkdown": "# 这是一个项目",
+      "tags": [
+        "Figma，Socket"
+      ],
+      "coverImage": "/uploads/projects/project-1774284556438/1774284597961.png",
+      "galleryImages": [
+        {
+          "src": "/uploads/projects/project-1774284556438/1774284602547.png",
+          "alt": "叶尔 展示图"
+        },
+        {
+          "src": "/uploads/projects/project-1774284556438/1774284602602.png",
+          "alt": "叶尔 展示图"
+        },
+        {
+          "src": "/uploads/projects/project-1774284556438/1774284602722.png",
+          "alt": "叶尔 展示图"
+        },
+        {
+          "src": "/uploads/projects/project-1774284556438/1774284602773.png",
+          "alt": "叶尔 展示图"
+        }
+      ],
+      "projectUrl": "",
+      "demoUrl": "",
+      "showSourceButton": false,
+      "showDemoButton": false,
+      "showDescriptionCard": true
+    }
+  ]
+}

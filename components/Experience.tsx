@@ -1,57 +1,51 @@
 "use client"
 
-import React from "react"
 import {
   VerticalTimeline,
   VerticalTimelineElement,
 } from "react-vertical-timeline-component"
 import "react-vertical-timeline-component/style.min.css"
-import {
-  experiencesData,
-  experiencesDataZn,
-  headerLanguageMap,
-} from "@/lib/data"
+import { sectionTitles, getExperienceIcon } from "@/lib/data"
+import type { ExperienceEntry } from "@/lib/site-content-schema"
 import SectionHeading from "./SectionHeading"
 import { motion } from "framer-motion"
 import { useTheme } from "@/context/theme-context"
 import { ExperienceLabel } from "./ExperienceLabel"
 import { useLocale } from "next-intl"
 
-export default function Experience({ isMobile }: { isMobile: boolean }) {
+type ExperienceProps = {
+  isMobile: boolean
+  experiences: ExperienceEntry[]
+}
+
+export default function Experience({ isMobile, experiences }: ExperienceProps) {
   const { theme } = useTheme()
+  const activeLocale = useLocale()
+  const content = activeLocale === "zh" ? sectionTitles.zh : sectionTitles.en
+
   const variants = {
     left: {
-      hidden: { x: -200, opacity: 0 },
-      visible: { x: 0, opacity: 1, transition: { duration: 0.5 } },
+      hidden: { x: -120, opacity: 0 },
+      visible: { x: 0, opacity: 1, transition: { duration: 0.45 } },
     },
     right: {
-      hidden: { x: 200, opacity: 0 },
-      visible: { x: 0, opacity: 1, transition: { duration: 0.5 } },
+      hidden: { x: 120, opacity: 0 },
+      visible: { x: 0, opacity: 1, transition: { duration: 0.45 } },
     },
   }
 
-  const activeLocale = useLocale()
-
-  const experienceDataShown =
-    activeLocale == "zh" ? experiencesDataZn : experiencesData
-
   return (
-    <section className="sm:mb-40 relative mb-20">
+    <section className="relative mb-20 sm:mb-40">
       <ExperienceLabel />
-      <SectionHeading>
-        {" "}
-        {activeLocale === "zh"
-          ? headerLanguageMap["Experiences"]
-          : "My Experiences"}
-      </SectionHeading>
+      <SectionHeading>{content.experiences}</SectionHeading>
       {!isMobile ? (
-        <VerticalTimeline lineColor={theme == "light" ? "#e9e9ea" : "#3b3d4f"}>
-          {experienceDataShown.map((item, index) => (
+        <VerticalTimeline lineColor={theme === "light" ? "#d8dee9" : "#374151"}>
+          {experiences.map((item, index) => (
             <motion.div
-              key={index}
+              key={item.id}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, amount: 0.5 }}
+              viewport={{ once: true, amount: 0.4 }}
               variants={variants[index % 2 === 0 ? "right" : "left"]}
               className="mb-20"
             >
@@ -60,29 +54,32 @@ export default function Experience({ isMobile }: { isMobile: boolean }) {
                 visible={true}
                 contentStyle={{
                   background:
-                    theme === "light" ? "#f3f4f6" : "rgba(255, 255, 255, 0.05)",
-                  boxShadow: "none",
-                  border: "1px solid rgba(0, 0, 0, 0.05)",
+                    theme === "light" ? "rgba(255,255,255,0.9)" : "rgba(255, 255, 255, 0.06)",
+                  boxShadow: "0 24px 80px rgba(15, 23, 42, 0.08)",
+                  border: "1px solid rgba(255, 255, 255, 0.25)",
+                  borderRadius: "1.5rem",
                   textAlign: "left",
                   padding: "1.3rem 2rem",
+                  backdropFilter: "blur(20px)",
                 }}
                 contentArrowStyle={{
                   borderRight:
                     theme === "light"
-                      ? "0.4rem solid #9ca3af"
-                      : "0.4rem solid rgba(255, 255, 255, 0.5)",
+                      ? "0.4rem solid rgba(255,255,255,0.85)"
+                      : "0.4rem solid rgba(255, 255, 255, 0.35)",
                 }}
                 date={item.date}
-                icon={<>{item.icon}</>}
+                icon={<>{getExperienceIcon(item.iconKey)}</>}
                 iconStyle={{
                   background:
-                    theme === "light" ? "white" : "rgba(255, 255, 255, 0.15)",
+                    theme === "light" ? "rgba(255,255,255,0.95)" : "rgba(255, 255, 255, 0.12)",
                   fontSize: "1.5rem",
+                  color: theme === "light" ? "#0f172a" : "#ffffff",
                 }}
               >
                 <h3 className="font-bold capitalize">{item.title}</h3>
                 <p className="font-normal !mt-0">{item.location}</p>
-                <p className="!mt-1 !font-normal text-gray-700 dark:text-white/75">
+                <p className="!mt-2 !font-normal leading-7 text-gray-700 dark:text-white/75">
                   {item.description}
                 </p>
               </VerticalTimelineElement>
@@ -91,15 +88,19 @@ export default function Experience({ isMobile }: { isMobile: boolean }) {
         </VerticalTimeline>
       ) : (
         <div className="flex flex-col gap-6">
-          {experienceDataShown.map((item, index) => (
+          {experiences.map((item) => (
             <div
-              key={index}
-              className={`flex dark:bg-slate-800 dark:text-slate-100 bg-slate-100 border-1 border-opacity-80 rounded-lg p-6 pb-8 flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-8 `}
+              key={item.id}
+              className="flex flex-col gap-4 rounded-[1.75rem] border border-white/60 bg-white/80 p-6 pb-8 shadow-[0_20px_70px_rgba(15,23,42,0.07)] backdrop-blur dark:border-white/10 dark:bg-white/5"
             >
-              <div className="w-10 h-5 sm:w-24 sm:h-24 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
-                {item.icon}
+              <div className="flex items-center gap-4">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-white">
+                  {getExperienceIcon(item.iconKey)}
+                </div>
+                <div className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">
+                  {item.date}
+                </div>
               </div>
-              {item.date}
               <div className="flex flex-col gap-2">
                 <h3 className="font-bold capitalize">{item.title}</h3>
                 <p className="font-normal !mt-0">{item.location}</p>

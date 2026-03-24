@@ -1,32 +1,74 @@
 "use client"
+/* eslint-disable @next/next/no-img-element */
 
-import Image from "next/image"
 import { motion } from "framer-motion"
-import { BsArrowRight, BsLinkedin } from "react-icons/bs"
 import { HiDownload } from "react-icons/hi"
-import { FaGithubSquare } from "react-icons/fa"
-import Link from "next/link"
 import { Source_Code_Pro } from "next/font/google"
 import { useLocale } from "next-intl"
 import { useSectionInView } from "@/lib/hooks"
 import { TypeAnimation } from "react-type-animation"
-import { useActiveSectionContext } from "@/context/action-section-context"
-import { useTranslations } from "next-intl"
 import useSound from "use-sound"
+import { introContent, profileActionItems } from "@/lib/data"
+import ContactCards, { type ProfileActionEntry } from "./ContactCards"
+import type { SiteContactEntry } from "@/lib/site-content-schema"
 
 const sourceCodePro = Source_Code_Pro({ subsets: ["latin"], weight: "400" })
 
-export default function Intro() {
+type IntroProps = {
+  profile: {
+    name: string
+    roles: string[]
+    shortIntro: string
+    focusLine: string
+    profileImage: string
+    resume: string
+    showResumeAction: boolean
+    showGithubAction: boolean
+    showBlogAction: boolean
+    socialLinks: {
+      github: string
+      blog: string
+    }
+    contacts: {
+      wechat: SiteContactEntry
+      qq: SiteContactEntry
+    }
+  }
+}
+
+export default function Intro({ profile }: IntroProps) {
   const { ref } = useSectionInView("Home")
   const activeLocale = useLocale()
-  const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext()
-  const t = useTranslations("IntroSection")
   const [playHover] = useSound("/bubble.wav", { volume: 0.5 })
+  const content = activeLocale === "zh" ? introContent.zh : introContent.en
+  const actionEntries: ProfileActionEntry[] = [
+    {
+      id: "resume",
+      label: content.downloadCvLabel,
+      icon: <HiDownload className="text-2xl text-slate-700 dark:text-white/80" />,
+      href: profile.resume,
+      display: profile.showResumeAction && Boolean(profile.resume),
+    },
+    {
+      id: "github",
+      label: "GitHub",
+      icon: profileActionItems.github.icon,
+      href: profile.socialLinks.github,
+      display: profile.showGithubAction && Boolean(profile.socialLinks.github),
+    },
+    {
+      id: "blog",
+      label: content.blogLabel,
+      icon: profileActionItems.blog.icon,
+      href: profile.socialLinks.blog,
+      display: profile.showBlogAction && Boolean(profile.socialLinks.blog),
+    },
+  ]
 
   return (
     <section
       ref={ref}
-      className="mb-10 max-w-[50rem] text-center sm:mb-0 scroll-mt-28 pt-[7rem]"
+      className="mb-10 flex max-w-[58rem] flex-col items-center text-center sm:mb-0 scroll-mt-28 pt-[7rem]"
       id="home"
     >
       <div className="flex items-center justify-center">
@@ -36,25 +78,18 @@ export default function Intro() {
             animate={{ scale: 1 }}
             transition={{ type: "tween", duration: 0.2 }}
           >
-            <Image
-              src="/profile.png"
-              alt="developer-image"
-              width="250"
-              height="250"
-              quality="95"
-              priority={true}
-              className="h-28 w-28 rounded-full object-cover border-[0.35rem] border-white shadow-xl"
+            <img
+              src={profile.profileImage}
+              alt="developer portrait"
+              className="h-28 w-28 rounded-full border-[0.35rem] border-white object-cover shadow-xl"
             />
           </motion.div>
           <motion.span
-            onHoverStart={() => {
-              console.log("sound")
-              playHover()
-            }}
+            onHoverStart={() => playHover()}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            whileHover={{ scale: 1.25, rotate: 15 }}
-            className="absolute text-4xl bottom-0 right-0 hover:rotate-2"
+            whileHover={{ rotate: 15, scale: 1.12 }}
+            className="absolute bottom-0 right-0 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-2xl shadow-lg"
             transition={{
               type: "spring",
               duration: 0.7,
@@ -62,118 +97,56 @@ export default function Intro() {
               stiffness: 125,
             }}
           >
-            👋
+            <span aria-hidden>*</span>
           </motion.span>
         </div>
       </div>
-      <motion.h1
-        className="mb-10 mt-4 px-4 text-2xl font-medium !leading-[1.5] sm:text-4xl"
-        initial={{ opacity: 0, y: 100 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <span className={`${sourceCodePro.className} text-sm tracking-wider `}>
-          {t("hello_im")}
-        </span>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="col-span-8 place-self-center text-center sm:text-left justify-self-start"
-        >
-          <h1 className="text-center text-4xl font-bold tracking-tight  sm:text-5xl">
-            {t("name")}
-          </h1>
-
-          <div className="text-center">
-            <span
-              className={`${sourceCodePro.className} text-sm tracking-wider`}
-            >
-              I&apos;m a{" "}
-            </span>
-            <h2
-              id="name"
-              className=" text-center  text-2xl  sm:text-5xl lg:text-4xl lg:leading-normal font-extrabold"
-            >
-              <TypeAnimation
-                sequence={[
-                  "Frontend Developer",
-                  1000,
-                  "Full Stack Developer",
-                  1000,
-                ]}
-                wrapper="span"
-                speed={50}
-                repeat={Infinity}
-              />
-            </h2>
-          </div>
-        </motion.div>
-        <p>{t("short_intro")}</p>
-        {activeLocale === "en" && (
-          <p>
-            My focus is{" "}
-            <span className="italic font-bold">React (Next.js)</span>.
-          </p>
-        )}
-      </motion.h1>
 
       <motion.div
-        className="flex flex-col sm:flex-row items-center justify-center  gap-3 px-4 text-lg font-medium"
+        className="mb-10 mt-4 px-4"
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          delay: 0.1,
-        }}
       >
-        {/* <Link
-          href="#contact"
-          onClick={() => {
-            setActiveSection("Contact")
-            setTimeOfLastClick(Date.now())
-          }}
-          className="group bg-gray-900 px-4 py-2 text-sm sm:text-lg text-white sm:px-7 sm:py-3 flex items-center gap-2  rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
-        >
-          Contact me here
-          <BsArrowRight className="opacity-70 group-hover:translate-x-1 transition" />
-        </Link> */}
+        <span className={`${sourceCodePro.className} text-sm tracking-[0.3em] text-slate-500`}>
+          {content.greeting}
+        </span>
+        <h1 className="mt-3 text-center text-4xl font-bold tracking-tight sm:text-6xl">
+          {profile.name}
+        </h1>
 
-        <Link
-          target="_blank"
-          className="bg-white py-2 px-3 text-sm text-gray-700 flex items-center gap-2 rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-gray-950 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
-          href={
-            activeLocale == "en"
-              ? "/joy-fullstack-resume.pdf"
-              : "/前端开发-彭郁洁.pdf"
-          }
-          locale={false}
-        >
-          {t("download_cv")}
-          <HiDownload />
-        </Link>
-        <a
-          className="bg-white p-3 text-gray-700 hover:text-gray-950 flex items-center gap-2 rounded-full focus:scale-[1.15] hover:scale-[1.15] active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
-          href="https://www.linkedin.com/in/joy-yujiepeng/"
-          target="_blank"
-        >
-          <BsLinkedin />
-        </a>
+        <div className="mt-5 text-center">
+          <span className={`${sourceCodePro.className} text-sm tracking-[0.25em] text-slate-500`}>
+            {content.roleLead}
+          </span>
+          <h2 className="mt-2 text-center text-2xl font-extrabold text-slate-900 sm:text-5xl dark:text-white">
+            <TypeAnimation
+              sequence={[
+                profile.roles[0] ?? "",
+                1000,
+                profile.roles[1] ?? profile.roles[0] ?? "",
+                1000,
+              ]}
+              wrapper="span"
+              speed={50}
+              repeat={Infinity}
+            />
+          </h2>
+        </div>
 
-        <a
-          className="bg-white p-3 text-gray-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-gray-950 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
-          href="https://github.com/Codefreyy"
-          target="_blank"
-        >
-          <FaGithubSquare />
-        </a>
-        <a
-          className=" bg-white py-2 px-3 text-sm text-gray-700 flex items-center gap-2  rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-gray-950 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
-          href="https://blog-joy-peng.netlify.app"
-          target="_blank"
-        >
-          {t("blog")}
-
-          {/* <FaGithubSquare /> */}
-        </a>
+        <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-700 dark:text-white/80">
+          {profile.shortIntro}
+        </p>
+        <p className="mx-auto mt-3 max-w-2xl text-base font-medium text-slate-500 dark:text-white/60">
+          {profile.focusLine}
+        </p>
+      </motion.div>
+      <motion.div
+        className="w-full"
+        initial={{ opacity: 0, y: 100 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+      >
+        <ContactCards contacts={profile.contacts} actions={actionEntries} />
       </motion.div>
     </section>
   )

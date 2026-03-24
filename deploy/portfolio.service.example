@@ -1,0 +1,17 @@
+[Unit]
+Description=Joy Personal Portfolio Next.js App
+After=network.target
+
+[Service]
+Type=simple
+User=www
+Group=www
+WorkingDirectory=/var/www/joy-personal-portfolio
+Environment=NODE_ENV=production
+EnvironmentFile=/var/www/joy-personal-portfolio/.env.production
+ExecStart=/usr/bin/npm run start -- --hostname 127.0.0.1 --port 3000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
